@@ -52,21 +52,24 @@ Structure
 	- bool unknown
 	- array Vertices
 		- double[3] vertex
-	- array Shapes
+	- array Faces
 		- uint32 unknown
 		- uint32 part - This is the part number in Pepakura
-		- double[4] unknown
+		- double[4] plane - XYZ normal, perpendicular distance to origin
 		- array Points
 			- uint32 index - Index into Vertices
-			- double[2] coord - 2D coordinate
-			- double[2] unknown
-			- bool unknown
-			- double[3] unknown
-			- uint32[3] unknown
+			- double[2] coord - 2D coordinates
+			- double[2] unknown - UV coordinates
+			- bool mayNeedTab - True if the edge should receive a tab if it is not contiguous with another shape
+			- double unknown
+			- double[2] tabAngles - Measured in radians
+			- float[3] unknown - Appears to also be an RGB color
 			- float[3] edge_color - RGB
-	- array Unknown
-		- uint32[4] unknown
-		- bool[2] unknown
+	- array Edges
+		- uint32[2] faceIndices - Index into Faces
+		- uint32[2] vertexIndices - Index into Vertices
+		- bool internal - True if the edge is internal (contiguous w/ other shapes in the same part)
+		- bool unknown
 		- uint32 unknown
 - array Textures
 	- wstr name
@@ -85,20 +88,20 @@ Structure
 	- double unknown
 	- bool unknown
 	- double[4] unknown
-	- array Unknown
-		- uint32 unknown
+	- array Parts
+		- uint32 geomIndex - Index into Geometry
 		- double[4] unknown
 		- if locked == 5
-			- wstr unknown
-		- array Unknown
+			- wstr partName
+		- array Faces
 			- bool unknown
 			- uint32 unknown
 			- bool flag1
 			- if flag1
-				- uint32[2] unknown
+				- uint32[2] shapeIndices - The two Shapes joined by this edge
 			- bool flag2
 			- if flag2
-				- uint32[2] unknown
+				- uint32[2] unknownIndices
 	- array Text - This holds text strings for rendering on the page
 		- double[5] unknown
 		- uint32[2] unknown
@@ -128,6 +131,6 @@ Structure
 - bool unknown
 - double unknown
 - if locked == 5
-	- wstr unknown
-	- wstr unknown
+	- wstr creator
+	- wstr description
 - uint32 eof - Always 0x270F
