@@ -56,7 +56,7 @@ Structure
 		- uint32 unknown
 		- uint32 part - This is the part number in Pepakura
 		- double[4] plane - XYZ normal, perpendicular distance to origin
-		- array Points
+		- array Points - Both 2D point data, and edge data (edge between current point and next point)
 			- uint32 index - Index into Vertices
 			- double[2] coord - 2D coordinates
 			- double[2] unknown - UV coordinates
