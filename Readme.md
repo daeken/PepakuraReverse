@@ -63,13 +63,13 @@ Structure
 			- bool may_need_tab - True if the edge should receive a tab if it is not contiguous with another shape
 			- double tab_height - Height of tab in mm
 			- double[2] tab_angles - Measured in radians
-			- float[3] unknown - Appears to also be an RGB color
+			- float[3] tab_edge_color - RGB
 			- float[3] edge_color - RGB
 	- array Edges
 		- uint32[2] face_indices - Index into Faces
 		- uint32[2] vertex_indices - Index into Vertices
 		- bool internal - True if the edge is internal (contiguous w/ other shapes in the same part)
-		- bool unknown
+		- bool hidden
 		- uint32 unknown
 - array Textures
 	- wstr name
