@@ -60,14 +60,14 @@ Structure
 			- uint32 index - Index into Vertices
 			- double[2] coord - 2D coordinates
 			- double[2] unknown - UV coordinates
-			- bool mayNeedTab - True if the edge should receive a tab if it is not contiguous with another shape
-			- double unknown
-			- double[2] tabAngles - Measured in radians
+			- bool may_need_tab - True if the edge should receive a tab if it is not contiguous with another shape
+			- double tab_height - Height of tab in mm
+			- double[2] tab_angles - Measured in radians
 			- float[3] unknown - Appears to also be an RGB color
 			- float[3] edge_color - RGB
 	- array Edges
-		- uint32[2] faceIndices - Index into Faces
-		- uint32[2] vertexIndices - Index into Vertices
+		- uint32[2] face_indices - Index into Faces
+		- uint32[2] vertex_indices - Index into Vertices
 		- bool internal - True if the edge is internal (contiguous w/ other shapes in the same part)
 		- bool unknown
 		- uint32 unknown
@@ -89,7 +89,7 @@ Structure
 	- bool unknown
 	- double[4] unknown
 	- array Parts
-		- uint32 geomIndex - Index into Geometry
+		- uint32 geom_index - Index into Geometry
 		- double[4] unknown
 		- if locked == 5
 			- wstr partName
@@ -98,10 +98,10 @@ Structure
 			- uint32 unknown
 			- bool flag1
 			- if flag1
-				- uint32[2] shapeIndices - The two Shapes joined by this edge
+				- uint32[2] shape_indices - The two Shapes joined by this edge
 			- bool flag2
 			- if flag2
-				- uint32[2] unknownIndices
+				- uint32[2] unknown_indices
 	- array Text - This holds text strings for rendering on the page
 		- double[5] unknown
 		- uint32[2] unknown
@@ -119,7 +119,7 @@ Structure
 		- uint32 compressed_size
 		- bytes[compressed_size] unknown - Zlib deflated
 - bool[5] unknown
-- uint32 unknown
+- uint32 flat_edge_threshold - defaults to 175
 - bool unknown
 - uint32[4] unknown
 - uint32 some_flag
