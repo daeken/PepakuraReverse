@@ -69,7 +69,7 @@ Structure
 		- uint32[2] face_indices - Index into Faces
 		- uint32[2] vertex_indices - Index into Vertices
 		- bool internal - True if the edge is internal (contiguous w/ other shapes in the same part)
-		- bool hidden
+		- bool unknown
 		- uint32 unknown
 - array Textures
 	- wstr name
@@ -94,7 +94,7 @@ Structure
 		- if locked == 5
 			- wstr partName
 		- array Faces
-			- bool unknown
+			- bool hidden
 			- uint32 unknown
 			- bool flag1
 			- if flag1
