@@ -103,8 +103,10 @@ Structure
 			- if flag2
 				- uint32[2] unknown_indices
 	- array Text - This holds text strings for rendering on the page
-		- double[5] unknown
-		- uint32[2] unknown
+		- double x, y, width, height
+		- double line_spacing
+		- uint32 color - RR GG BB 00, 0xBBGGRR in little-endian
+		- uint32 font_size
 		- wstr font
 		- array Lines
 			- wstr line
