@@ -24,7 +24,7 @@ All content is little endian
 
 - uint8, uint16, uint32 - Unsigned integers of various bit lengths
 - wstr - UTF-8 string, prefixed with uint32 length in bytes
-	- For "locked" files, the value `key` (inside the first 'if locked') gets subtracted from each byte to "decrypt" it
+	- For "locked" files, the value `key` (inside the first 'if format_ver') gets subtracted from each byte to "decrypt" it
 - float, double - 32-bit and 64-bit floating point values, respectively; standard IEEE 754 floats
 - bytes - Simply a C string for convenience
 - array - This means there's a uint32 count, then that many children, one indent level in
@@ -33,17 +33,21 @@ Structure
 =========
 
 - bytes "version 3\n"
-- uint32 locked - 4 is unlocked, 5 is locked, all others undefined
+- uint32 format_ver - 4 is old unlocked format, 5 and 6 are locked and use slightly different formats.
 - uint32 unknown
 - uint32 version
-- if locked == 5
+- if format_ver > 4
 	- wstr creator - This will be empty for en-us, "Pepakura Designer 3" elsewhere
 	- uint32 key
 - wstr locale - Empty for en-us
 - wstr codepage
-- uint32 unknown
-- wstr hexstring
-- if locked == 5
+- if format_ver > 5
+        - null-terminated wstr (no length given) hash
+        - uint unknown
+- else
+	- uint unknown
+	- wstr hash
+- if format_ver == 5
 	- bool unknown
 	- bool unknown
 - double[4] unknown
@@ -77,6 +81,7 @@ Structure
 	- float[4] unknown
 	- float[4] unknown
 	- float[4] unknown
+	- float[4] unknown
 	- bool has_image
 	- if has_image
 		- uint32 width - In pixels
@@ -91,7 +96,7 @@ Structure
 	- array Parts
 		- uint32 geom_index - Index into Geometry
 		- double[4] unknown
-		- if locked == 5
+		- if format_ver > 4
 			- wstr partName
 		- array Faces
 			- bool hidden
@@ -120,17 +125,28 @@ Structure
 		- uint32[2] unknown
 		- uint32 compressed_size
 		- bytes[compressed_size] unknown - Zlib deflated
-- bool[5] unknown
+- bool[4] unknown
+- bool show_tabs;
+- if format_ver > 5
+        - bool show_edge_ids
+        - bool unknown
+        - bool apply_materials - when 0, all faces are white
+        - bool ignore_flat_edges
 - uint32 flat_edge_threshold - defaults to 175
-- bool unknown
-- uint32[4] unknown
-- uint32 some_flag
-- if some_flag == 0x0b
-	- double[2] unknown
-- uint32[3] unknown
-- double[6] unknown
-- double[6] unknown
-- bool unknown
+- bool draw_white_lines_under_dotted_lines
+- uint32 mountain_fold_style - 0: solid, 1: none, 3: mountain dotted
+- uint32 valley_fold_style - 0: solid, 1: none, 2: valley dotted
+- uint32 cut_style - 0: solid, 1: none
+- uint32 unknown
+- uint32 paper_type - 0: A4, 1: A3, 2: A2, 3: A1, 4: B5, 5: B4, 6: B3, 7: B2, 8: B1, 9: Letter, 10: Legal
+- if paper_type == 11
+	- double width, height
+- uint32 page_orientation - 0 = Portrait, 1 = Landscape
+- uint32 side_margin
+- uint32 top_margin
+- double[6] mountain_dashes - dash-blank spacing for mountain dotted lines
+- double[6] valley_dashes - dash-blank spacing for valley dotted lines
+- bool outline_padding - makes texture colors bleed out onto blank space
 - double unknown
 - if locked == 5
 	- wstr creator
