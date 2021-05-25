@@ -42,8 +42,8 @@ Structure
 - wstr locale - Empty for en-us
 - wstr codepage
 - if format_ver > 5
-        - null-terminated wstr (no length given) hash
-        - uint unknown
+	- null-terminated wstr (no length given) hash
+	- uint unknown
 - else
 	- uint unknown
 	- wstr hash
@@ -128,10 +128,10 @@ Structure
 - bool[4] unknown
 - bool show_tabs;
 - if format_ver > 5
-        - bool show_edge_ids
-        - bool unknown
-        - bool apply_materials - when 0, all faces are white
-        - bool ignore_flat_edges
+	- bool show_edge_ids
+	- bool unknown
+	- bool apply_materials - when 0, all faces are white
+	- bool ignore_flat_edges
 - uint32 flat_edge_threshold - defaults to 175
 - bool draw_white_lines_under_dotted_lines
 - uint32 mountain_fold_style - 0: solid, 1: none, 3: mountain dotted
