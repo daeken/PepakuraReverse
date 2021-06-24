@@ -42,11 +42,11 @@ Structure
 - wstr locale - Empty for en-us
 - wstr codepage
 - if format_ver > 5
-	- null-terminated wstr (no length given) hash
-	- uint unknown
+	- null-terminated wstr (no length given) hash - MD5 of "%s%d" filled with password & lock type. Empty password & 0 lock type = unlocked.
+	- uint lock_type - lock type; 0: none, 1: allow changing textxure, 2: full locking
 - else
-	- uint unknown
-	- wstr hash
+	- uint lock_type
+	- wstr hash - MD5 of "%d%s%d" filled with (face count + edge count), password (empty if unlocked), and lock type (0 if unlocked).
 - if format_ver == 5
 	- bool unknown
 	- bool unknown
