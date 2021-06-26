@@ -99,7 +99,7 @@ Structure
 		- if format_ver > 4
 			- wstr partName
 		- array PartEdge - Connections between faces
-			- bool hidden - Whether this partedge is hiddden
+			- bool hidden - Whether this partedge is hidden
 			- uint32 unknown
 			- bool edge_side1_present - Logically always must be true
 			- if edge_side1_present
