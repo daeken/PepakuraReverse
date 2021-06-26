@@ -95,18 +95,20 @@ Structure
 	- double[4] unknown
 	- array Parts
 		- uint32 geom_index - Index into Geometry
-		- double[4] unknown
+		- double[4] bounds - x/y/w/h
 		- if format_ver > 4
 			- wstr partName
-		- array Faces
-			- bool hidden
+		- array PartEdge - Connections between faces
+			- bool hidden - Whether this partedge is hiddden
 			- uint32 unknown
-			- bool flag1
-			- if flag1
-				- uint32[2] shape_indices - The two Shapes joined by this edge
-			- bool flag2
-			- if flag2
-				- uint32[2] unknown_indices
+			- bool edge_side1_present - Logically always must be true
+			- if edge_side1_present
+				- uint32 face - Index into Section -> Faces
+				- uint32 vertexIdx - Index into Section -> Vertices. Refers to an edge the same way Points do above.
+			- bool edge_side2_present - False if this edge connects to no other face
+			- if edge_side2_present
+				- uint32 face - Index into Section -> Faces
+				- uint32 vertexIdx - Index into Section -> Vertices
 	- array Text - This holds text strings for rendering on the page
 		- double x, y, width, height
 		- double line_spacing
@@ -127,7 +129,7 @@ Structure
 		- bytes[compressed_size] unknown - Zlib deflated
 - bool[4] unknown
 - bool show_tabs;
-- if format_ver > 5
+- if format_ver > 5 - TODO: Sometimes, these fields don't show up, even in format_ver = 6. When do they?
 	- bool show_edge_ids
 	- bool unknown
 	- bool apply_materials - when 0, all faces are white
