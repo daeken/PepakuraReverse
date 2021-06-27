@@ -57,7 +57,7 @@ Structure
 	- array Vertices
 		- double[3] vertex
 	- array Faces
-		- uint32 unknown
+		- uint32 textureIdx - Index into Textures
 		- uint32 part - This is the part number in Pepakura
 		- double[4] plane - XYZ normal, perpendicular distance to origin
 		- array Points - Both 2D point data, and edge data (edge between current point and next point)
