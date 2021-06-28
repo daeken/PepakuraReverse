@@ -103,12 +103,12 @@ Structure
 			- uint32 unknown
 			- bool edge_side1_present - Logically always must be true
 			- if edge_side1_present
-				- uint32 face - Index into Section -> Faces
-				- uint32 vertexIdx - Index into Section -> Vertices. Refers to an edge the same way Points do above.
+				- uint32 face - Index into Geometry -> Faces
+				- uint32 vertexIdx - Index into Geometry -> Vertices. Refers to an edge the same way Points do above.
 			- bool edge_side2_present - False if this edge connects to no other face
 			- if edge_side2_present
-				- uint32 face - Index into Section -> Faces
-				- uint32 vertexIdx - Index into Section -> Vertices
+				- uint32 face - Index into Geometry -> Faces
+				- uint32 vertexIdx - Index into Geometry -> Vertices
 	- array Text - This holds text strings for rendering on the page
 		- double x, y, width, height
 		- double line_spacing
