@@ -134,13 +134,11 @@ Structure
 	- array Groups
 		- array GroupItems
 			- uint32 elementIndex - 0: None, 1 + part index: Part, 1 + part count + text index: Text, likely can also reference images on the page (stored in the compressed data above)
-- bool[4] unknown
 - bool show_tabs;
-- if format_ver > 5 - TODO: Sometimes, these fields don't show up, even in format_ver = 6. When do they?
-	- bool show_edge_ids
-	- bool unknown
-	- bool apply_materials - when 0, all faces are white
-	- bool ignore_flat_edges
+- bool show_edge_ids
+- bool unknown
+- bool apply_materials - when 0, all faces are white
+- bool ignore_flat_edges
 - uint32 flat_edge_threshold - defaults to 175
 - bool draw_white_lines_under_dotted_lines
 - uint32 mountain_fold_style - 0: solid, 1: none, 3: mountain dotted
