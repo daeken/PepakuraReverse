@@ -132,6 +132,11 @@ Structure
 		- bytes[compressed_size] unknown - Zlib deflated
 - bool[4] unknown
 - bool show_tabs;
+- if format_ver > 5 - Likely grouping data? Not sure how this works
+	- array Unknown
+		- uint32 unknown
+	- array Unknown
+		- uint32 unknown
 - if format_ver > 5 - TODO: Sometimes, these fields don't show up, even in format_ver = 6. When do they?
 	- bool show_edge_ids
 	- bool unknown
