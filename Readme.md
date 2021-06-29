@@ -130,10 +130,10 @@ Structure
 		- uint32[2] unknown
 		- uint32 compressed_size
 		- bytes[compressed_size] unknown - Zlib deflated
-- if format_ver > 5 - Likely grouping data? Not sure how this works
-	- array Unknown
-		- array Unknown
-			- uint32 unknown
+- if format_ver > 5 - Groups
+	- array Groups
+		- array GroupItems
+			- uint32 elementIndex - 0: None, 1 + part index: Part, 1 + part count + text index: Text, likely can also reference images on the page (stored in the compressed data above)
 - bool[4] unknown
 - bool show_tabs;
 - if format_ver > 5 - TODO: Sometimes, these fields don't show up, even in format_ver = 6. When do they?
