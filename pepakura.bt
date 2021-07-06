@@ -1,0 +1,255 @@
+//------------------------------------------------
+//--- 010 Editor v11.0.1 Binary Template
+//
+//      File: pepakura.bt
+//   Authors: ungato
+//   Version: v1.0
+//   Purpose: Help parse & understand pepakura files
+//------------------------------------------------
+typedef struct {
+  local string content = "";
+  local char currentChar;
+  while((currentChar = ReadByte()) != '\n') {
+    content += currentChar;
+    FSkip(1);
+  }
+  FSkip(1);
+} PlainLine <read=readPlainLine>;
+
+string readPlainLine(PlainLine& line) { return line.content; }
+
+typedef struct {
+  int length;
+  local int realLength;
+  if(file.formatVer == 6) {
+    realLength = length / 2;
+  } else {
+    realLength = length;
+  }
+  if(file.formatVer == 6) {
+    wchar_t content[realLength];
+  } else {
+    char content[realLength];
+  }
+} WStr <read=ReadWStr>;
+
+string ReadWStr(WStr& str) { return str.content; }
+
+typedef struct {
+  int length;
+  local int realLength;
+  if(file.formatVer > 5) {
+    realLength = length / 2;
+  } else {
+    realLength = length;
+  }
+  if(file.formatVer > 5) {
+    wchar_t encodedContent[realLength];
+    local wchar_t content[realLength];
+  } else {
+    char encodedContent[realLength];
+    local char content[realLength];
+  }
+  local int i;
+  for(i = 0; i < realLength; i++) {
+    if(file.formatVer > 5) {
+      content[i]  =  ((encodedContent[i] & 0xFF) - file.realKey) & 0xFF;
+      content[i] |= (((encodedContent[i] >> 8)   - file.realKey) & 0xFF) << 8;
+    } else {
+      content[i] = (encodedContent[i] - file.realKey) & 0xFF;
+    }
+  }
+} LStr <read=ReadLStr>;
+
+string ReadLStr(LStr& str) { return str.content; }
+
+typedef struct {
+  local wstring content = "";
+  local wchar_t currentChar;
+  local wchar_t temp;
+  while((currentChar = ReadShort()) != (file.realKey << 8) + file.realKey) {
+    temp = currentChar;
+    currentChar  =  ((temp & 0xFF) - file.realKey) & 0xFF;
+    currentChar |= (((temp >> 8)   - file.realKey) & 0xFF) << 8;
+    content += currentChar;
+    FSkip(2);
+  }
+  FSkip(2);
+} NullTermLStr <read=readNullTermLStr>;
+
+string readNullTermLStr(NullTermLStr& str) { return str.content; }
+
+typedef float Color[3] <read=readColor>;
+string readColor(Color c) {
+  string ret;
+  SPrintf(ret, "0x%02X%02X%02X", (int)(c[0] * 255), (int)(c[1] * 255), (int)(c[2] * 255));
+  return ret;
+}
+
+typedef struct Point {
+  uint index;
+  double coord[2];
+  double uv[2];
+  byte mayNeedTab;
+  double tabHeight;
+  double tabAngles[2];
+  Color tabEdgeColor;
+  Color edgeColor;
+} Point;
+
+typedef struct Face {
+  uint unk1;
+  uint partNum;
+  double plane[4];
+  uint pointCount;
+  Point points[pointCount] <optimize=false>;
+} Face;
+
+typedef struct Edge {
+  uint faceIndices[2];
+  uint vertexIndices[2];
+  byte internal;
+  byte unk1;
+  uint unk2;
+} Edge;
+
+typedef struct {
+  LStr name;
+  byte unk1;
+  uint vertexCount;
+  double vertex[vertexCount * 3];
+  uint faceCount;
+  Face faces[faceCount] <optimize=false>;
+  uint edgeCount;
+  Edge edges[edgeCount] <optimize=false>;
+} Section;
+
+typedef struct {
+  LStr name;
+  float unk[16];
+  float alpha, r, g, b;
+  byte hasImage;
+  if(hasImage != 0) {
+    uint width, height;
+    uint compressedSize;
+    byte compressedData[compressedSize];
+  }
+} Texture;
+
+typedef struct {
+  byte hidden;
+  uint unk2;
+  byte hasShapeIndices;
+  if(hasShapeIndices)
+    uint shapeIndices[2];
+  byte hasOtherIndices;
+  if(hasOtherIndices)
+    uint otherIndices[2];
+} PartFace;
+
+typedef struct {
+  uint geomIndex;
+  double unk1[4];
+  if(file.formatVer > 4) {
+    LStr partName;
+  }
+  uint faceCount;
+  PartFace faces[faceCount] <optimize=false>;
+} Part;
+
+typedef struct {
+  double unk1[4];
+  double lineSpacing;
+  uint color; //0xRRGGBB00
+  uint fontSize;
+  LStr font;
+  uint lineCount;
+  LStr lines[lineCount] <optimize=false>;
+} Text;
+
+typedef struct {
+  double unk1[4];
+  uint unk2[2];
+  uint compressedSize;
+  byte compressedData[compressedSize];
+} CompressedThing;
+
+typedef struct {
+  double unk1;
+  byte unk2;
+  double unk3[4];
+  uint partCount;
+  Part parts[partCount]  <optimize=false>;
+  uint textCount;
+  Text text[textCount] <optimize=false>;
+  uint things1Count;
+  CompressedThing things1[things1Count] <optimize=false>;
+  uint things2Count;
+  CompressedThing things2[things2Count] <optimize=false>;
+} PageData;
+
+struct FILE {
+  PlainLine versionStr;
+  uint formatVer;
+  uint unk1;
+  uint version;
+  local uint realKey = 0;
+  if (file.formatVer > 4) {
+    LStr creator;
+    uint key;
+    realKey = key;
+  }
+  LStr locale;
+  LStr codepage;
+  if(file.formatVer > 5) {
+    NullTermLStr hash;
+    uint unk2;
+  } else {
+    uint unk2;
+    LStr hash;
+  }
+  if (file.formatVer == 5) {
+    byte lockFlag1;
+    byte lockFlag2;
+  }
+  double unk3[4];
+  uint sectionCount;
+  Section sections[sectionCount] <optimize=false>;
+  uint textureCount;
+  Texture textures[textureCount] <optimize=false>;
+  byte hasPageData;
+  if(hasPageData) {
+    PageData pageData;
+  }
+  byte unk4[4];
+  byte showTabs;
+  if(file.formatVer > 5) {
+    byte showEdgeIDs;
+    byte unk5[1];
+    byte applyMaterials; // When 0, all faces are white
+    byte ignoreFlatEdges; // Whether or not to respect flatEdgeThreshold
+  }
+  uint flatEdgeThreshold;
+  byte drawWhiteLinesUnderDottedLines;
+  uint mountainFoldStyle; // 0: solid, 1: none, 3: mountain dotted
+  uint valleyFoldStyle; // 0: solid, 1: none, 2: valley dotted
+  uint cutStyle; // 0: solid, 1: none
+  uint unk7[1];
+  uint paperType; // 0: A4, 1: A3, 2: A2, 3: A1, 4: B5, 5: B4, 6: B3, 7: B2, 8: B1, 9: Letter, 10: Legal
+  if(file.paperType == 11) { // Custom paper type
+    double width;
+    double height;
+  }
+  uint isLandscape;
+  uint sideMargin;
+  uint topMargin;
+  double mountainDashes[6]; // dot-dash-space pattern for mountain folds
+  double valleyDashes[6]; // dot-dash-space pattern for valley folds
+  byte addOutlinePadding; // makes texture colors bleed out onto blank space
+  double unk12;
+  if(file.formatVer > 4) {
+    LStr creator;
+    LStr description;
+  }
+  uint eof;
+} file;
