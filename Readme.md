@@ -158,7 +158,7 @@ Structure
 - double[6] valley_dashes - dash-blank spacing for valley dotted lines
 - bool outline_padding - makes texture colors bleed out onto blank space
 - double unknown
-- if locked == 5
+- if fmtver == 5
 	- wstr creator
 	- wstr description
 - uint32 eof - Always 0x270F
