@@ -23,8 +23,11 @@ Data Types
 All content is little endian
 
 - uint8, uint16, uint32 - Unsigned integers of various bit lengths
-- wstr - UTF-8 string, prefixed with uint32 length in bytes
-	- For "locked" files, the value `key` (inside the first 'if format_ver') gets subtracted from each byte to "decrypt" it
+- wstr - string data, prefixed with uint32 length in bytes
+	- The value `key` (inside the first 'if format_ver') gets subtracted from each byte to "decrypt" it
+	- On all fmtver's, the length in bytes covers the entirety of the string; it is not a count of characters and does not exclude the null terminator.
+	- On fmtver <= 5, this data is encoded with the system encoding and is terminated by a zero *which is not encoded with the key*.
+	- On fmtver >= 6, this data is UTF-16, and is terminated by an encoded UTF-16 zero.
 - float, double - 32-bit and 64-bit floating point values, respectively; standard IEEE 754 floats
 - bytes - Simply a C string for convenience
 - array - This means there's a uint32 count, then that many children, one indent level in
