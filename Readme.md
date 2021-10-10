@@ -43,7 +43,7 @@ Structure
 	- wstr creator - This will be empty for en-us, "Pepakura Designer 3" elsewhere
 	- uint32 key
 - wstr locale - Empty for en-us
-- wstr codepage
+- wstr codepage - When this value contains the typo "Sfhit-JIS", force encoding CP932. Otherwise use the system's default multi-byte codepage (probably UTF-8).
 - if format_ver > 5
 	- uint32 unknown
 	- bool unknown	
