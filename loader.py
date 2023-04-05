@@ -75,9 +75,9 @@ class ParseBuffer(object):
 
     def str(self, size: int = None):
         if size is None:
-            return self.read(self.uint32).decode("utf-8")
+            return self.read(self.uint32).decode("utf-8", errors="ignore")
         else:
-            return self.read(size).decode("utf-8")
+            return self.read(size).decode("utf-8", errors="ignore")
 
     @property
     def wstr(self):
